@@ -1,0 +1,1016 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="My Life Story">
+    <title>My Life Story</title>
+    <link rel="apple-touch-icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><rect fill='%23667eea' width='100' height='100' rx='20'/><text x='50' y='70' font-size='60' text-anchor='middle' fill='white' font-family='serif'>π</text></svg>">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -webkit-tap-highlight-color: transparent;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 100%;
+            margin: 0 auto;
+            background: white;
+            min-height: 100vh;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+
+        .progress-bar {
+            background: rgba(255,255,255,0.2);
+            height: 6px;
+            border-radius: 3px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: white;
+            height: 100%;
+            width: 0%;
+            transition: width 0.3s ease;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .chapter-badge {
+            display: inline-block;
+            background: #667eea;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            margin-bottom: 15px;
+        }
+
+        .btn-toc {
+            background: #f59e0b;
+            color: white;
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        .btn-toc:active {
+            transform: scale(0.98);
+        }
+
+        .question-card {
+            background: #f8f9fa;
+            border-left: 4px solid #667eea;
+            padding: 20px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+        }
+
+        .question-number {
+            color: #667eea;
+            font-weight: 600;
+            font-size: 13px;
+            margin-bottom: 8px;
+        }
+
+        .question-text {
+            font-size: 18px;
+            line-height: 1.6;
+            color: #2d3748;
+            font-weight: 500;
+        }
+
+        .answer-section {
+            margin-top: 20px;
+        }
+
+        textarea {
+            width: 100%;
+            min-height: 250px;
+            padding: 15px;
+            border: 2px solid #e2e8f0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            resize: vertical;
+            transition: border-color 0.3s ease;
+            line-height: 1.6;
+        }
+
+        textarea:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .voice-hint {
+            background: #e6fffa;
+            border: 2px dashed #38b2ac;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 15px;
+            text-align: center;
+        }
+
+        .voice-hint p {
+            color: #234e52;
+            font-size: 14px;
+            margin: 0;
+        }
+
+        .voice-hint strong {
+            color: #038272;
+        }
+
+        .button-group {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin-top: 20px;
+        }
+
+        button {
+            padding: 16px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            touch-action: manipulation;
+        }
+
+        button:active {
+            transform: scale(0.98);
+        }
+
+        .btn-primary {
+            background: #667eea;
+            color: white;
+        }
+
+        .btn-secondary {
+            background: #e2e8f0;
+            color: #2d3748;
+        }
+
+        .btn-success {
+            background: #48bb78;
+            color: white;
+            grid-column: 1 / -1;
+        }
+
+        .saved-indicator {
+            display: none;
+            background: #48bb78;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 10px;
+            margin-top: 15px;
+            text-align: center;
+            animation: fadeIn 0.3s ease;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .navigation-info {
+            text-align: center;
+            color: #718096;
+            font-size: 13px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e2e8f0;
+        }
+
+        .download-section {
+            background: #f7fafc;
+            padding: 20px;
+            border-radius: 10px;
+            margin-top: 30px;
+            text-align: center;
+        }
+
+        .download-section h3 {
+            color: #2d3748;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        .stats {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin: 20px 0;
+            padding: 20px;
+            background: white;
+            border-radius: 10px;
+        }
+
+        .stat {
+            text-align: center;
+        }
+
+        .stat-number {
+            font-size: 32px;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .stat-label {
+            font-size: 13px;
+            color: #718096;
+            margin-top: 5px;
+        }
+
+        /* Table of Contents Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.7);
+            overflow-y: auto;
+        }
+
+        .modal-content {
+            background-color: white;
+            margin: 20px auto;
+            padding: 0;
+            width: 90%;
+            max-width: 600px;
+            border-radius: 15px;
+            box-shadow: 0 5px 30px rgba(0,0,0,0.3);
+            max-height: 85vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .modal-header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 15px 15px 0 0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .modal-header h2 {
+            margin: 0;
+            font-size: 22px;
+        }
+
+        .close-btn {
+            background: rgba(255,255,255,0.2);
+            border: none;
+            color: white;
+            font-size: 28px;
+            font-weight: bold;
+            cursor: pointer;
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 0;
+        }
+
+        .close-btn:hover {
+            background: rgba(255,255,255,0.3);
+        }
+
+        .modal-body {
+            padding: 20px;
+            overflow-y: auto;
+        }
+
+        .chapter-section {
+            margin-bottom: 25px;
+        }
+
+        .chapter-title {
+            background: #f8f9fa;
+            padding: 12px 15px;
+            border-left: 4px solid #667eea;
+            font-weight: 600;
+            font-size: 16px;
+            color: #2d3748;
+            margin-bottom: 10px;
+            border-radius: 5px;
+        }
+
+        .question-list {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .question-item {
+            padding: 12px 15px;
+            margin: 5px 0;
+            background: white;
+            border: 1px solid #e2e8f0;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+        }
+
+        .question-item:hover {
+            background: #f7fafc;
+            border-color: #667eea;
+            transform: translateX(5px);
+        }
+
+        .question-item.answered {
+            background: #f0fdf4;
+            border-color: #86efac;
+        }
+
+        .question-item.current {
+            background: #eff6ff;
+            border-color: #667eea;
+            border-width: 2px;
+        }
+
+        .question-number-badge {
+            background: #667eea;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 5px;
+            font-size: 12px;
+            font-weight: 600;
+            min-width: 35px;
+            text-align: center;
+        }
+
+        .question-item.answered .question-number-badge {
+            background: #22c55e;
+        }
+
+        .question-item.current .question-number-badge {
+            background: #3b82f6;
+        }
+
+        .question-text-preview {
+            flex: 1;
+            font-size: 14px;
+            color: #4b5563;
+            line-height: 1.4;
+        }
+
+        .checkmark {
+            color: #22c55e;
+            font-weight: bold;
+            margin-left: auto;
+        }
+
+        .install-banner {
+            background: #fffbeb;
+            border: 2px solid #fbbf24;
+            padding: 15px;
+            border-radius: 10px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .install-banner.hidden {
+            display: none;
+        }
+
+        .install-banner p {
+            color: #92400e;
+            font-size: 14px;
+            margin-bottom: 10px;
+        }
+
+        .install-banner button {
+            background: #f59e0b;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📖 My Life Story</h1>
+            <p>Share your memories for future generations</p>
+            <div class="progress-bar">
+                <div class="progress-fill" id="progressBar"></div>
+            </div>
+        </div>
+
+        <div class="content">
+            <!-- Install banner for iOS/Android -->
+            <div class="install-banner" id="installBanner">
+                <p><strong>💡 Tip:</strong> Add this to your home screen to use it like an app!</p>
+                <p id="installInstructions"></p>
+                <button onclick="hideInstallBanner()">Got it!</button>
+            </div>
+
+            <div class="chapter-badge" id="chapterBadge"></div>
+            
+            <button class="btn-toc" onclick="openTableOfContents()" style="width: 100%; margin-bottom: 20px;">📋 Table of Contents</button>
+            
+            <div class="question-card">
+                <div class="question-number" id="questionNumber"></div>
+                <div class="question-text" id="questionText"></div>
+            </div>
+
+            <div class="answer-section">
+                <div class="voice-hint">
+                    <p><strong>🎤 Tip:</strong> Tap the text box and use your keyboard's microphone button to speak your answer!</p>
+                    <p style="font-size: 12px; margin-top: 5px;"><em>No character limit - write as much as you'd like!</em></p>
+                </div>
+                
+                <textarea 
+                    id="answerBox" 
+                    placeholder="Tap here and start typing or use voice-to-text... Write as much as you'd like - there's no limit!"
+                    maxlength="1000000"
+                ></textarea>
+
+                <div style="text-align: right; color: #718096; font-size: 12px; margin-top: 5px;">
+                    <span id="wordCount">0 words</span>
+                </div>
+
+                <div class="saved-indicator" id="savedIndicator">
+                    ✓ Answer saved automatically
+                </div>
+
+                <div class="button-group">
+                    <button class="btn-secondary" onclick="previousQuestion()">← Previous</button>
+                    <button class="btn-primary" onclick="nextQuestion()">Next →</button>
+                </div>
+
+                <div class="navigation-info">
+                    <strong>Progress:</strong> <span id="progressText">0/201</span> questions answered
+                </div>
+            </div>
+
+            <div class="download-section">
+                <h3>📥 Save Your Story</h3>
+                <div class="stats">
+                    <div class="stat">
+                        <div class="stat-number" id="answeredCount">0</div>
+                        <div class="stat-label">Answered</div>
+                    </div>
+                    <div class="stat">
+                        <div class="stat-number" id="remainingCount">201</div>
+                        <div class="stat-label">Remaining</div>
+                    </div>
+                </div>
+                <button class="btn-success" onclick="downloadStory()">💾 Download My Complete Story</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Table of Contents Modal -->
+    <div id="tocModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>📋 Table of Contents</h2>
+                <button class="close-btn" onclick="closeTableOfContents()">&times;</button>
+            </div>
+            <div class="modal-body" id="tocBody">
+                <!-- Generated dynamically -->
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            // Chapter 1: Early Life & Childhood (35 questions)
+            { chapter: "Early Life & Childhood", text: "What is your full name and what is the story behind your name?" },
+            { chapter: "Early Life & Childhood", text: "When and where were you born?" },
+            { chapter: "Early Life & Childhood", text: "What are your earliest childhood memories?" },
+            { chapter: "Early Life & Childhood", text: "What was your childhood home like? Describe the rooms, the yard, and your favorite spots." },
+            { chapter: "Early Life & Childhood", text: "Tell me about your parents. What were they like?" },
+            { chapter: "Early Life & Childhood", text: "What did your parents do for a living?" },
+            { chapter: "Early Life & Childhood", text: "Do you have any siblings? Tell me about them." },
+            { chapter: "Early Life & Childhood", text: "What was your relationship with your siblings like growing up?" },
+            { chapter: "Early Life & Childhood", text: "What were your favorite toys or games as a child?" },
+            { chapter: "Early Life & Childhood", text: "Did you have any pets growing up? What were they like?" },
+            { chapter: "Early Life & Childhood", text: "What was your favorite thing to do on the weekends?" },
+            { chapter: "Early Life & Childhood", text: "What kind of mischief did you get into as a kid?" },
+            { chapter: "Early Life & Childhood", text: "Who was your best friend growing up? What did you do together?" },
+            { chapter: "Early Life & Childhood", text: "What were your favorite books or stories as a child?" },
+            { chapter: "Early Life & Childhood", text: "What was your favorite meal that your parents made?" },
+            { chapter: "Early Life & Childhood", text: "What holidays or celebrations were most important to your family?" },
+            { chapter: "Early Life & Childhood", text: "What family traditions did you have growing up?" },
+            { chapter: "Early Life & Childhood", text: "What did you want to be when you grew up?" },
+            { chapter: "Early Life & Childhood", text: "Tell me about your neighborhood. What was it like?" },
+            { chapter: "Early Life & Childhood", text: "What was the most trouble you ever got into as a child?" },
+            { chapter: "Early Life & Childhood", text: "What made you laugh the most as a child?" },
+            { chapter: "Early Life & Childhood", text: "Did you have any chores? What were they?" },
+            { chapter: "Early Life & Childhood", text: "What was your favorite season and why?" },
+            { chapter: "Early Life & Childhood", text: "Tell me about a memorable birthday from your childhood." },
+            { chapter: "Early Life & Childhood", text: "What scared you when you were little?" },
+            { chapter: "Early Life & Childhood", text: "What was the first major historical event you remember?" },
+            { chapter: "Early Life & Childhood", text: "What was technology like when you were growing up?" },
+            { chapter: "Early Life & Childhood", text: "What games did you play outside?" },
+            { chapter: "Early Life & Childhood", text: "Tell me about your grandparents. What were they like?" },
+            { chapter: "Early Life & Childhood", text: "Did you go to church or participate in any religious activities?" },
+            { chapter: "Early Life & Childhood", text: "What was your favorite subject in elementary school?" },
+            { chapter: "Early Life & Childhood", text: "Who was your favorite teacher and why?" },
+            { chapter: "Early Life & Childhood", text: "What was the best gift you ever received as a child?" },
+            { chapter: "Early Life & Childhood", text: "If you could give one piece of advice to your childhood self, what would it be?" },
+            { chapter: "Early Life & Childhood", text: "What do you remember most fondly about your childhood?" },
+
+            // Chapter 2: School Years (30 questions)
+            { chapter: "School Years", text: "What schools did you attend?" },
+            { chapter: "School Years", text: "Were you a good student? What subjects did you excel in?" },
+            { chapter: "School Years", text: "What subjects did you struggle with?" },
+            { chapter: "School Years", text: "Did you participate in any sports? Tell me about that experience." },
+            { chapter: "School Years", text: "What clubs or extracurricular activities were you involved in?" },
+            { chapter: "School Years", text: "Tell me about your high school years. What were they like?" },
+            { chapter: "School Years", text: "Who were your closest friends in high school?" },
+            { chapter: "School Years", text: "Did you go to school dances or proms? What were they like?" },
+            { chapter: "School Years", text: "What was the coolest car when you were in high school?" },
+            { chapter: "School Years", text: "What music were you listening to as a teenager?" },
+            { chapter: "School Years", text: "What fashion trends were popular when you were young?" },
+            { chapter: "School Years", text: "Tell me about your first job. What was it?" },
+            { chapter: "School Years", text: "How much did you earn at your first job?" },
+            { chapter: "School Years", text: "What did you do with your first paycheck?" },
+            { chapter: "School Years", text: "Did you have a car in high school? What kind?" },
+            { chapter: "School Years", text: "What was dating like when you were a teenager?" },
+            { chapter: "School Years", text: "Tell me about your first crush or first love." },
+            { chapter: "School Years", text: "What did you do for fun with your friends?" },
+            { chapter: "School Years", text: "What was the biggest challenge you faced as a teenager?" },
+            { chapter: "School Years", text: "How would your friends have described you in high school?" },
+            { chapter: "School Years", text: "Did you get into any trouble during your teenage years?" },
+            { chapter: "School Years", text: "What was your proudest moment in school?" },
+            { chapter: "School Years", text: "Did you go to college? Where and what did you study?" },
+            { chapter: "School Years", text: "If you didn't go to college, what did you do after high school?" },
+            { chapter: "School Years", text: "What were your college years like?" },
+            { chapter: "School Years", text: "Did you live in a dorm or off-campus?" },
+            { chapter: "School Years", text: "Tell me about a memorable professor or teacher who influenced you." },
+            { chapter: "School Years", text: "What did you learn about yourself during your school years?" },
+            { chapter: "School Years", text: "What is your most memorable school experience?" },
+            { chapter: "School Years", text: "If you could go back and change anything about your school years, what would it be?" },
+
+            // Chapter 3: Career & Work Life (35 questions)
+            { chapter: "Career & Work Life", text: "What was your first real career job?" },
+            { chapter: "Career & Work Life", text: "How did you decide on your career path?" },
+            { chapter: "Career & Work Life", text: "What jobs have you had throughout your life?" },
+            { chapter: "Career & Work Life", text: "Which job did you enjoy the most and why?" },
+            { chapter: "Career & Work Life", text: "Which job was the most challenging?" },
+            { chapter: "Career & Work Life", text: "Tell me about your proudest professional achievement." },
+            { chapter: "Career & Work Life", text: "Who was the best boss you ever had? What made them great?" },
+            { chapter: "Career & Work Life", text: "Who was the worst boss you ever had?" },
+            { chapter: "Career & Work Life", text: "Tell me about a memorable coworker or colleague." },
+            { chapter: "Career & Work Life", text: "What was the hardest day you ever had at work?" },
+            { chapter: "Career & Work Life", text: "What was the best day you ever had at work?" },
+            { chapter: "Career & Work Life", text: "Did you ever change careers? Why?" },
+            { chapter: "Career & Work Life", text: "What skills did you develop through your work?" },
+            { chapter: "Career & Work Life", text: "What was the most important lesson you learned from work?" },
+            { chapter: "Career & Work Life", text: "Did you ever work with any famous or notable people?" },
+            { chapter: "Career & Work Life", text: "What was the biggest challenge you overcame in your career?" },
+            { chapter: "Career & Work Life", text: "Did you ever have to make a difficult decision at work?" },
+            { chapter: "Career & Work Life", text: "What was your typical workday like?" },
+            { chapter: "Career & Work Life", text: "How did you balance work and family life?" },
+            { chapter: "Career & Work Life", text: "Did you travel for work? Where did you go?" },
+            { chapter: "Career & Work Life", text: "What was the most interesting project you worked on?" },
+            { chapter: "Career & Work Life", text: "If you could give career advice to your younger self, what would it be?" },
+            { chapter: "Career & Work Life", text: "What did you want to achieve in your career?" },
+            { chapter: "Career & Work Life", text: "Did you achieve your career goals?" },
+            { chapter: "Career & Work Life", text: "What would you have done differently in your career?" },
+            { chapter: "Career & Work Life", text: "Who inspired you in your professional life?" },
+            { chapter: "Career & Work Life", text: "Tell me about a time you failed at work and what you learned." },
+            { chapter: "Career & Work Life", text: "What are you most proud of in your career?" },
+            { chapter: "Career & Work Life", text: "How has work changed from when you started to now?" },
+            { chapter: "Career & Work Life", text: "What advice would you give to someone starting in your field?" },
+            { chapter: "Career & Work Life", text: "Did you mentor anyone? What was that like?" },
+            { chapter: "Career & Work Life", text: "What was your retirement like?" },
+            { chapter: "Career & Work Life", text: "How did it feel to retire?" },
+            { chapter: "Career & Work Life", text: "What do you miss about working?" },
+            { chapter: "Career & Work Life", text: "What do you enjoy most about being retired?" },
+
+            // Chapter 4: Love, Relationships & Family (40 questions)
+            { chapter: "Love, Relationships & Family", text: "Tell me the story of how you met your significant other." },
+            { chapter: "Love, Relationships & Family", text: "What were your first impressions of each other?" },
+            { chapter: "Love, Relationships & Family", text: "How did you know they were 'the one'?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about your first date." },
+            { chapter: "Love, Relationships & Family", text: "How long did you date before getting engaged or committed?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about your proposal or how you decided to commit. How did it happen?" },
+            { chapter: "Love, Relationships & Family", text: "What was your wedding day like?" },
+            { chapter: "Love, Relationships & Family", text: "What was the best part of your wedding?" },
+            { chapter: "Love, Relationships & Family", text: "What do you remember most about your wedding day or commitment ceremony?" },
+            { chapter: "Love, Relationships & Family", text: "Where did you go on your honeymoon?" },
+            { chapter: "Love, Relationships & Family", text: "What was the first year of your relationship like?" },
+            { chapter: "Love, Relationships & Family", text: "What has been the secret to a lasting relationship?" },
+            { chapter: "Love, Relationships & Family", text: "What qualities do you most admire in your partner?" },
+            { chapter: "Love, Relationships & Family", text: "What's the best advice you ever received about relationships?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about when you found out you were going to be a parent." },
+            { chapter: "Love, Relationships & Family", text: "How did you feel when you became a parent?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about the day your first child was born." },
+            { chapter: "Love, Relationships & Family", text: "What were you like as a new parent?" },
+            { chapter: "Love, Relationships & Family", text: "What surprised you most about being a parent?" },
+            { chapter: "Love, Relationships & Family", text: "What was the hardest part about being a parent?" },
+            { chapter: "Love, Relationships & Family", text: "What was the best part about being a parent?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about a special memory you have of your children when they were babies." },
+            { chapter: "Love, Relationships & Family", text: "Tell me about a special memory you have of your children when they were young." },
+            { chapter: "Love, Relationships & Family", text: "What was your proudest moment as a parent?" },
+            { chapter: "Love, Relationships & Family", text: "Was there a moment when you felt you really understood what being a parent meant?" },
+            { chapter: "Love, Relationships & Family", text: "What traditions did you create for your family?" },
+            { chapter: "Love, Relationships & Family", text: "What values were most important for you to pass on to your children?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about a time you worried about your children." },
+            { chapter: "Love, Relationships & Family", text: "Tell me about a time you were really proud of your children." },
+            { chapter: "Love, Relationships & Family", text: "What do you hope your family remembers most about you?" },
+            { chapter: "Love, Relationships & Family", text: "What was your parenting style?" },
+            { chapter: "Love, Relationships & Family", text: "What would you do differently as a parent?" },
+            { chapter: "Love, Relationships & Family", text: "What family vacations do you remember most?" },
+            { chapter: "Love, Relationships & Family", text: "Tell me about the houses you've lived in." },
+            { chapter: "Love, Relationships & Family", text: "What was your favorite age for your children?" },
+            { chapter: "Love, Relationships & Family", text: "How did you handle the challenges of parenting?" },
+            { chapter: "Love, Relationships & Family", text: "What has watching your children grow up been like?" },
+            { chapter: "Love, Relationships & Family", text: "What do you love most about being a parent?" },
+            { chapter: "Love, Relationships & Family", text: "What advice about relationships would you give to your children?" },
+            { chapter: "Love, Relationships & Family", text: "What advice about parenting would you give to your children?" },
+
+            // Chapter 5: Life Experiences & Adventures (35 questions)
+            { chapter: "Life Experiences & Adventures", text: "What has been the greatest adventure of your life?" },
+            { chapter: "Life Experiences & Adventures", text: "What places have you traveled to?" },
+            { chapter: "Life Experiences & Adventures", text: "What was your favorite place you've ever visited?" },
+            { chapter: "Life Experiences & Adventures", text: "Is there anywhere you wish you had visited?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about a time you took a big risk." },
+            { chapter: "Life Experiences & Adventures", text: "What is the bravest thing you've ever done?" },
+            { chapter: "Life Experiences & Adventures", text: "What is the scariest thing that ever happened to you?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about a time you failed at something important." },
+            { chapter: "Life Experiences & Adventures", text: "What did you learn from that failure?" },
+            { chapter: "Life Experiences & Adventures", text: "What is the biggest obstacle you've overcome in life?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about a time you were really surprised by something." },
+            { chapter: "Life Experiences & Adventures", text: "What is the funniest thing that ever happened to you?" },
+            { chapter: "Life Experiences & Adventures", text: "Have you ever met anyone famous?" },
+            { chapter: "Life Experiences & Adventures", text: "What historical events have you witnessed in your lifetime?" },
+            { chapter: "Life Experiences & Adventures", text: "How has the world changed during your lifetime?" },
+            { chapter: "Life Experiences & Adventures", text: "What invention or technology amazed you the most?" },
+            { chapter: "Life Experiences & Adventures", text: "Did you serve in the military? Tell me about that experience." },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about your hobbies and interests." },
+            { chapter: "Life Experiences & Adventures", text: "What skills or talents do you have?" },
+            { chapter: "Life Experiences & Adventures", text: "What is something you've always wanted to learn?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about a time you helped someone in need." },
+            { chapter: "Life Experiences & Adventures", text: "Who has helped you the most in life?" },
+            { chapter: "Life Experiences & Adventures", text: "What is the kindest thing anyone has ever done for you?" },
+            { chapter: "Life Experiences & Adventures", text: "What is the kindest thing you've done for someone else?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about a major decision that changed your life." },
+            { chapter: "Life Experiences & Adventures", text: "What is something you wish you had done differently?" },
+            { chapter: "Life Experiences & Adventures", text: "What is your biggest regret?" },
+            { chapter: "Life Experiences & Adventures", text: "If you could relive one day of your life, which would it be?" },
+            { chapter: "Life Experiences & Adventures", text: "What moment in your life are you most grateful for?" },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about the best day of your life." },
+            { chapter: "Life Experiences & Adventures", text: "Tell me about the hardest day of your life." },
+            { chapter: "Life Experiences & Adventures", text: "How have you changed as a person over the years?" },
+            { chapter: "Life Experiences & Adventures", text: "What lessons has life taught you?" },
+            { chapter: "Life Experiences & Adventures", text: "If you could go back in time, what advice would you give yourself at age 20? At age 30? At age 40?" },
+            { chapter: "Life Experiences & Adventures", text: "What do you know now that you wish you'd known earlier?" },
+
+            // Chapter 6: Reflections & Wisdom (26 questions)
+            { chapter: "Reflections & Wisdom", text: "What does happiness mean to you?" },
+            { chapter: "Reflections & Wisdom", text: "What are you most grateful for in life?" },
+            { chapter: "Reflections & Wisdom", text: "What is your greatest accomplishment?" },
+            { chapter: "Reflections & Wisdom", text: "What are you most proud of?" },
+            { chapter: "Reflections & Wisdom", text: "What values are most important to you?" },
+            { chapter: "Reflections & Wisdom", text: "What does success mean to you?" },
+            { chapter: "Reflections & Wisdom", text: "What is the most important lesson you've learned in life?" },
+            { chapter: "Reflections & Wisdom", text: "What advice would you give to future generations?" },
+            { chapter: "Reflections & Wisdom", text: "What do you hope your legacy will be?" },
+            { chapter: "Reflections & Wisdom", text: "How would you like to be remembered?" },
+            { chapter: "Reflections & Wisdom", text: "What brings you the most joy in life?" },
+            { chapter: "Reflections & Wisdom", text: "What are your hopes for your children and grandchildren?" },
+            { chapter: "Reflections & Wisdom", text: "What dreams do you still have?" },
+            { chapter: "Reflections & Wisdom", text: "If you could have any superpower, what would it be and why?" },
+            { chapter: "Reflections & Wisdom", text: "What three things would you take to a desert island?" },
+            { chapter: "Reflections & Wisdom", text: "If you were granted three wishes, what would they be?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite color and why?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite food?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite movie?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite book?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite song or type of music?" },
+            { chapter: "Reflections & Wisdom", text: "What is your favorite memory of all time?" },
+            { chapter: "Reflections & Wisdom", text: "What makes you laugh?" },
+            { chapter: "Reflections & Wisdom", text: "What are you afraid of?" },
+            { chapter: "Reflections & Wisdom", text: "What gives your life meaning?" },
+            { chapter: "Reflections & Wisdom", text: "Is there anything else you want to share with future generations?" }
+        ];
+
+        let currentQuestionIndex = 0;
+        let answers = {};
+
+        // Load saved answers from localStorage
+        function loadAnswers() {
+            const saved = localStorage.getItem('myLifeStory');
+            if (saved) {
+                answers = JSON.parse(saved);
+            }
+        }
+
+        // Save answers to localStorage
+        function saveAnswers() {
+            localStorage.setItem('myLifeStory', JSON.stringify(answers));
+            showSavedIndicator();
+        }
+
+        function showSavedIndicator() {
+            const indicator = document.getElementById('savedIndicator');
+            indicator.style.display = 'block';
+            setTimeout(() => {
+                indicator.style.display = 'none';
+            }, 2000);
+        }
+
+        function displayQuestion() {
+            const question = questions[currentQuestionIndex];
+            document.getElementById('chapterBadge').textContent = question.chapter;
+            document.getElementById('questionNumber').textContent = `Question ${currentQuestionIndex + 1} of ${questions.length}`;
+            document.getElementById('questionText').textContent = question.text;
+            
+            // Load saved answer if it exists
+            const answerBox = document.getElementById('answerBox');
+            answerBox.value = answers[currentQuestionIndex] || '';
+            
+            // Update word count for loaded answer
+            updateWordCount(answerBox.value);
+            
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const answeredCount = Object.keys(answers).filter(key => answers[key] && answers[key].trim().length > 0).length;
+            const percentage = (answeredCount / questions.length) * 100;
+            
+            document.getElementById('progressBar').style.width = percentage + '%';
+            document.getElementById('progressText').textContent = `${answeredCount}/${questions.length}`;
+            document.getElementById('answeredCount').textContent = answeredCount;
+            document.getElementById('remainingCount').textContent = questions.length - answeredCount;
+        }
+
+        function nextQuestion() {
+            // Save current answer
+            const answer = document.getElementById('answerBox').value;
+            if (answer.trim()) {
+                answers[currentQuestionIndex] = answer;
+                saveAnswers();
+            }
+            
+            // Move to next question
+            if (currentQuestionIndex < questions.length - 1) {
+                currentQuestionIndex++;
+                displayQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        function previousQuestion() {
+            // Save current answer
+            const answer = document.getElementById('answerBox').value;
+            if (answer.trim()) {
+                answers[currentQuestionIndex] = answer;
+                saveAnswers();
+            }
+            
+            // Move to previous question
+            if (currentQuestionIndex > 0) {
+                currentQuestionIndex--;
+                displayQuestion();
+                window.scrollTo(0, 0);
+            }
+        }
+
+        // Auto-save as user types (debounced)
+        let saveTimeout;
+        document.getElementById('answerBox').addEventListener('input', function() {
+            // Update word count
+            updateWordCount(this.value);
+            
+            clearTimeout(saveTimeout);
+            saveTimeout = setTimeout(() => {
+                const answer = this.value;
+                if (answer.trim()) {
+                    answers[currentQuestionIndex] = answer;
+                    saveAnswers();
+                }
+            }, 1000);
+        });
+
+        function updateWordCount(text) {
+            const words = text.trim().split(/\s+/).filter(word => word.length > 0);
+            const count = text.trim().length === 0 ? 0 : words.length;
+            document.getElementById('wordCount').textContent = `${count} word${count !== 1 ? 's' : ''}`;
+        }
+
+        function downloadStory() {
+            let content = "MY LIFE STORY\n";
+            content += "=".repeat(50) + "\n\n";
+            
+            let currentChapter = '';
+            questions.forEach((question, index) => {
+                if (question.chapter !== currentChapter) {
+                    currentChapter = question.chapter;
+                    content += "\n" + "=".repeat(50) + "\n";
+                    content += currentChapter.toUpperCase() + "\n";
+                    content += "=".repeat(50) + "\n\n";
+                }
+                
+                content += `Question ${index + 1}: ${question.text}\n\n`;
+                
+                if (answers[index] && answers[index].trim()) {
+                    content += answers[index] + "\n";
+                } else {
+                    content += "[Not yet answered]\n";
+                }
+                content += "\n" + "-".repeat(50) + "\n\n";
+            });
+            
+            const blob = new Blob([content], { type: 'text/plain' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'My-Life-Story-' + new Date().toISOString().split('T')[0] + '.txt';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function openTableOfContents() {
+            generateTableOfContents();
+            document.getElementById('tocModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeTableOfContents() {
+            document.getElementById('tocModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        function generateTableOfContents() {
+            const tocBody = document.getElementById('tocBody');
+            tocBody.innerHTML = '';
+            
+            let currentChapter = '';
+            let chapterSection = null;
+            let questionList = null;
+            
+            questions.forEach((question, index) => {
+                if (question.chapter !== currentChapter) {
+                    currentChapter = question.chapter;
+                    
+                    chapterSection = document.createElement('div');
+                    chapterSection.className = 'chapter-section';
+                    
+                    const chapterTitle = document.createElement('div');
+                    chapterTitle.className = 'chapter-title';
+                    chapterTitle.textContent = currentChapter;
+                    
+                    questionList = document.createElement('ul');
+                    questionList.className = 'question-list';
+                    
+                    chapterSection.appendChild(chapterTitle);
+                    chapterSection.appendChild(questionList);
+                    tocBody.appendChild(chapterSection);
+                }
+                
+                const questionItem = document.createElement('li');
+                questionItem.className = 'question-item';
+                
+                if (answers[index] && answers[index].trim()) {
+                    questionItem.classList.add('answered');
+                }
+                if (index === currentQuestionIndex) {
+                    questionItem.classList.add('current');
+                }
+                
+                const badge = document.createElement('span');
+                badge.className = 'question-number-badge';
+                badge.textContent = index + 1;
+                
+                const textPreview = document.createElement('span');
+                textPreview.className = 'question-text-preview';
+                textPreview.textContent = question.text;
+                
+                questionItem.appendChild(badge);
+                questionItem.appendChild(textPreview);
+                
+                if (answers[index] && answers[index].trim()) {
+                    const checkmark = document.createElement('span');
+                    checkmark.className = 'checkmark';
+                    checkmark.textContent = '✓';
+                    questionItem.appendChild(checkmark);
+                }
+                
+                questionItem.onclick = () => {
+                    jumpToQuestion(index);
+                    closeTableOfContents();
+                };
+                
+                questionList.appendChild(questionItem);
+            });
+        }
+
+        function jumpToQuestion(index) {
+            const answer = document.getElementById('answerBox').value;
+            if (answer.trim()) {
+                answers[currentQuestionIndex] = answer;
+                saveAnswers();
+            }
+            
+            currentQuestionIndex = index;
+            displayQuestion();
+            window.scrollTo(0, 0);
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('tocModal');
+            if (event.target === modal) {
+                closeTableOfContents();
+            }
+        }
+
+        // Install banner detection and management
+        function detectDevice() {
+            const isIOS = /iPad|iPhone|iPod/.test(navigator.userAgent) && !window.MSStream;
+            const isAndroid = /Android/.test(navigator.userAgent);
+            const isStandalone = window.navigator.standalone || window.matchMedia('(display-mode: standalone)').matches;
+            
+            const banner = document.getElementById('installBanner');
+            const instructions = document.getElementById('installInstructions');
+            
+            // Don't show banner if already installed or dismissed
+            if (isStandalone || localStorage.getItem('installBannerDismissed')) {
+                banner.classList.add('hidden');
+                return;
+            }
+            
+            if (isIOS) {
+                instructions.innerHTML = '<small>Tap <strong>Share</strong> <span style="font-size: 18px;">⎙</span> then <strong>Add to Home Screen</strong></small>';
+            } else if (isAndroid) {
+                instructions.innerHTML = '<small>Tap <strong>Menu</strong> <span style="font-size: 18px;">⋮</span> then <strong>Add to Home screen</strong></small>';
+            } else {
+                banner.classList.add('hidden');
+            }
+        }
+
+        function hideInstallBanner() {
+            document.getElementById('installBanner').classList.add('hidden');
+            localStorage.setItem('installBannerDismissed', 'true');
+        }
+
+        // Initialize
+        loadAnswers();
+        displayQuestion();
+        detectDevice();
+    </script>
+</body>
+</html>
